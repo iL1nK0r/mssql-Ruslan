@@ -217,16 +217,18 @@ select
 */
 
 select 
-year(si.InvoiceDate) AS 'Год Продажи',
-month(si.InvoiceDate) as 'Месяц Продажи',
-Description as 'Наименование товара',
+year(InvoiceDate) AS 'Год Продажи',
+month(InvoiceDate) as 'Месяц Продажи',
+convert(nvarchar(100),Description,104) as 'Наименование товара',
  sum(sil.quantity*  sil.unitprice) as 'Сумма продаж',
- convert(nvarchar(16),si.InvoiceDate,104) as 'Дата первой продажи',
+ min(InvoiceDate) as 'Дата первой продажи',
  sum(sil.quantity) as 'Количество проданного'
  from Sales.Invoices si
  join sales.InvoiceLines sil on si.InvoiceID = sil.InvoiceID
-  group by year(si.InvoiceDate), month(si.InvoiceDate) ,Description
- ORDER BY year(si.InvoiceDate), month(si.InvoiceDate) , Description
+ where Description is not null
+ group by year(InvoiceDate), month(InvoiceDate) , Description
+ ORDER BY year(InvoiceDate), month(InvoiceDate) , Description
+
 
 
 -- ---------------------------------------------------------------------------
